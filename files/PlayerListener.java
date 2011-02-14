@@ -1,4 +1,4 @@
-package <yourname>.<pluginname>;
+package org.bukkit.<yourname>.<pluginname>;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

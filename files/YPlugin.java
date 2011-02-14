@@ -1,4 +1,4 @@
-package <yourname>.<pluginname>;
+package org.bukkit.<yourname>.<pluginname>;
 
 import java.io.File;
 import java.util.HashMap;
