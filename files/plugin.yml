@@ -1,0 +1,13 @@
+name: <pluginname>
+description: <plugindescription>
+author: <yourname>
+#website: www.example.com
+main: org.bukkit.<yourname>.<pluginname>
+version: <pluginversion>
+#commands:
+#    example:
+#        description: Example command
+#        usage: /<command>
+#    poke:
+#        description: Example with arguement, poke a player.
+#        usage: /<command> [player]

@@ -118,6 +118,7 @@ read_config
 # Questions.
 echo -ne "${c_cyan}Author's name:${c_default} "; read USERNAME
 echo -ne "${c_cyan}Plugin's name:${c_default} "; read PLUGINNAME
+echo -ne "${c_cyan}Plugin's Description:${c_default} "; read PLUGINDESCRIPTION
 echo -ne "${c_cyan}Plugin Version (${c_default}0.1${c_cyan} by default):${c_default} "; read PLUGINVERSION
 PLUGINVERSION=${PLUGINVERSION:-0.1}
 
@@ -149,9 +150,11 @@ YBLOCKLISTENER=${PLUGINNAME}BlockListener.java
 PLAYERLISTENER=PlayerListener.java
 YPLAYERLISTENER=${PLUGINNAME}PlayerListener.java 
 PLUGIN=YPlugin.java
+YAML=plugin.yml
 YPLUGIN="${PLUGINNAME}.java"
-ENDPATH="${output_folder}/${PLUGINNAME}/src/org/bukkit/${USERNAME}/${PLUGINNAME}"
-BINPATH="${output_folder}/${PLUGINNAME}/bin"
+PROJECTPATH="${output_folder}/${PLUGINNAME}"
+ENDPATH="${PROJECTPATH}/src/org/bukkit/${USERNAME}/${PLUGINNAME}"
+BINPATH="${PROJECTPATH}/bin"
 
 # Create the output directories.
 mkdir -p "${ENDPATH}"
@@ -162,60 +165,71 @@ SCRIPTROOT=`pwd`
 cd "${ENDPATH}"
 
 # Create our plugin's YAML file.
-cd ../../../
-echo "name: $PLUGINNAME
-
-main: $USERNAME.$PLUGINNAME
-
-version: $PLUGINVERSION" > plugin.yml
+#cd ../../../
+#echo "name: $PLUGINNAME
+#
+#main: $USERNAME.$PLUGINNAME
+#
+#version: $PLUGINVERSION" > plugin.yml
 
 # Inform USERNAME on status.
 echo -e "${c_cyan}Generating ${c_green}Source Files${c_cyan}..${c_default}"
 
 # Copy the rest of the template files.
 cd "${SCRIPTROOT}"
-sed -e "s/<yourname>/$USERNAME/g" -e "s/<pluginname>/$PLUGINNAME/g" "${SCRIPTROOT}/files/${BLOCKLISTENER}" > "${ENDPATH}/$YBLOCKLISTENER"
-sed -e "s/<yourname>/$USERNAME/g" -e "s/<pluginname>/$PLUGINNAME/g" "${SCRIPTROOT}/files/${PLAYERLISTENER}" > "${ENDPATH}/$YPLAYERLISTENER"
-sed -e "s/<yourname>/$USERNAME/g" -e "s/<pluginname>/$PLUGINNAME/g" "${SCRIPTROOT}/files/${PLUGIN}" > "${ENDPATH}/${PLUGINNAME}.java"
+sed -e "s/<yourname>/$USERNAME/g"\
+    -e "s/<pluginname>/$PLUGINNAME/g"\
+    -e "s/<pluginversion>/$PLUGINVERSION/g"\
+    -e "s/<plugindescription>/$PLUGINDESCRIPTION/g"\
+        "${SCRIPTROOT}/files/${YAML}" > "${PROJECTPATH}/$YAML"
+sed -e "s/<yourname>/$USERNAME/g"\
+    -e "s/<pluginname>/$PLUGINNAME/g"\
+        "${SCRIPTROOT}/files/${BLOCKLISTENER}" > "${ENDPATH}/$YBLOCKLISTENER"
+sed -e "s/<yourname>/$USERNAME/g"\
+    -e "s/<pluginname>/$PLUGINNAME/g"\
+        "${SCRIPTROOT}/files/${PLAYERLISTENER}" > "${ENDPATH}/$YPLAYERLISTENER"
+sed -e "s/<yourname>/$USERNAME/g"\
+    -e "s/<pluginname>/$PLUGINNAME/g"\
+        "${SCRIPTROOT}/files/${PLUGIN}" > "${ENDPATH}/${PLUGINNAME}.java"
 
 # Project file generation.
 
 ## Eclipse
 if [ $gen_eclipse == 1 ]; then
 	echo -e "${c_cyan}Generating ${c_green}Eclipse Project Files${c_cyan}..${c_default}"
-	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/eclipse/.project" > "${output_folder}/${PLUGINNAME}/.project"
-	cp "${SCRIPTROOT}/projects/eclipse/.classpath" "${output_folder}/${PLUGINNAME}/.classpath"
+	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/eclipse/.project" > "${PROJECTPATH}/.project"
+	cp "${SCRIPTROOT}/projects/eclipse/.classpath" "${PROJECTPATH}/.classpath"
 fi
 
 ## IntelliJ
 if [ $gen_intellij == 1 ]; then
 	echo -e "${c_cyan}Generating ${c_green}Intelli-J Project Files${c_cyan}..${c_default}"
-	mkdir -p "${output_folder}/${PLUGINNAME}/.idea"
-	echo -n "${PLUGINNAME}" > "${output_folder}/${PLUGINNAME}/.idea/.name"
-	cp "${SCRIPTROOT}/projects/intellij/compiler.xml" "${output_folder}/${PLUGINNAME}/.idea/compiler.xml"
-	cp "${SCRIPTROOT}/projects/intellij/encodings.xml" "${output_folder}/${PLUGINNAME}/.idea/encodings.xml"
-	cp "${SCRIPTROOT}/projects/intellij/vcs.xml" "${output_folder}/${PLUGINNAME}/.idea/vcs.xml"
-	cp "${SCRIPTROOT}/projects/intellij/project.iml" "${output_folder}/${PLUGINNAME}/${PLUGINNAME}.iml"
-	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/intellij/modules.xml" > "${output_folder}/${PLUGINNAME}/.idea/modules.xml"
-	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/intellij/workspace.xml" > "${output_folder}/${PLUGINNAME}/.idea/workspace.xml"
+	mkdir -p "${PROJECTPATH}/.idea"
+	echo -n "${PLUGINNAME}" > "${PROJECTPATH}/.idea/.name"
+	cp "${SCRIPTROOT}/projects/intellij/compiler.xml" "${PROJECTPATH}/.idea/compiler.xml"
+	cp "${SCRIPTROOT}/projects/intellij/encodings.xml" "${PROJECTPATH}/.idea/encodings.xml"
+	cp "${SCRIPTROOT}/projects/intellij/vcs.xml" "${PROJECTPATH}/.idea/vcs.xml"
+	cp "${SCRIPTROOT}/projects/intellij/project.iml" "${PROJECTPATH}/${PLUGINNAME}.iml"
+	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/intellij/modules.xml" > "${PROJECTPATH}/.idea/modules.xml"
+	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/intellij/workspace.xml" > "${PROJECTPATH}/.idea/workspace.xml"
 fi
 
 ## NetBeans
 if [ $gen_netbeans == 1 ]; then
 	echo -e "${c_cyan}Generating ${c_green}Netbeans Project Files${c_cyan}..${c_default}"
-	mkdir -p "${output_folder}/${PLUGINNAME}/nbproject"
-	mkdir -p "${output_folder}/${PLUGINNAME}/nbproject/private"
-	cp "${SCRIPTROOT}/projects/netbeans/genfiles.properties" "${output_folder}/${PLUGINNAME}/nbproject/genfiles.properties"
-	cp "${SCRIPTROOT}/projects/netbeans/private/private.properties" "${output_folder}/${PLUGINNAME}/nbproject/private/private.properties"
-	sed -e "s/{{USERNAME}}/$USERNAME/g" -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/netbeans/project.properties" > "${output_folder}/${PLUGINNAME}/nbproject/project.properties"
-	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/netbeans/build-impl.xml" > "${output_folder}/${PLUGINNAME}/nbproject/build-impl.xml"
-	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/netbeans/project.xml" > "${output_folder}/${PLUGINNAME}/nbproject/project.xml"
+	mkdir -p "${PROJECTPATH}/nbproject"
+	mkdir -p "${PROJECTPATH}/nbproject/private"
+	cp "${SCRIPTROOT}/projects/netbeans/genfiles.properties" "${PROJECTPATH}/nbproject/genfiles.properties"
+	cp "${SCRIPTROOT}/projects/netbeans/private/private.properties" "${PROJECTPATH}/nbproject/private/private.properties"
+	sed -e "s/{{USERNAME}}/$USERNAME/g" -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/netbeans/project.properties" > "${PROJECTPATH}/nbproject/project.properties"
+	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/netbeans/build-impl.xml" > "${PROJECTPATH}/nbproject/build-impl.xml"
+	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/netbeans/project.xml" > "${PROJECTPATH}/nbproject/project.xml"
 fi
 
 ## Apache Ant
 if [ $gen_ant == 1 ]; then
 	echo -e "${c_cyan}Generating ${c_green}Ant Build File${c_cyan}..${c_default}"
-	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/ant/build.xml" > "${output_folder}/${PLUGINNAME}/build.xml"
+	sed -e "s/{{PLUGINNAME}}/$PLUGINNAME/g" "${SCRIPTROOT}/projects/ant/build.xml" > "${PROJECTPATH}/build.xml"
 fi
 
 # Done
