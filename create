@@ -181,7 +181,7 @@ sed -e "s/<yourname>/$USERNAME/g"\
     -e "s/<pluginname>/$PLUGINNAME/g"\
     -e "s/<pluginversion>/$PLUGINVERSION/g"\
     -e "s/<plugindescription>/$PLUGINDESCRIPTION/g"\
-        "${SCRIPTROOT}/files/${YAML}" > "${PROJECTPATH}/$YAML"
+        "${SCRIPTROOT}/files/${YAML}" > "${PROJECTPATH}/src/$YAML"
 sed -e "s/<yourname>/$USERNAME/g"\
     -e "s/<pluginname>/$PLUGINNAME/g"\
         "${SCRIPTROOT}/files/${BLOCKLISTENER}" > "${ENDPATH}/$YBLOCKLISTENER"
