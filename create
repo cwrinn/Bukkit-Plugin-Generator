@@ -164,14 +164,6 @@ mkdir -p "${BINPATH}"
 SCRIPTROOT=`pwd`
 cd "${ENDPATH}"
 
-# Create our plugin's YAML file.
-#cd ../../../
-#echo "name: $PLUGINNAME
-#
-#main: $USERNAME.$PLUGINNAME
-#
-#version: $PLUGINVERSION" > plugin.yml
-
 # Inform USERNAME on status.
 echo -e "${c_cyan}Generating ${c_green}Source Files${c_cyan}..${c_default}"
 
