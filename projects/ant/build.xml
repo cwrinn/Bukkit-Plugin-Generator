@@ -68,8 +68,8 @@
   
   <property name="compiler.args.{{PLUGINNAME}}" value="${compiler.args}"/>
   
-  <property name="{{PLUGINNAME}}.output.dir" value="${module.{{PLUGINNAME}}.basedir}/out/production/{{PLUGINNAME}}"/>
-  <property name="{{PLUGINNAME}}.testoutput.dir" value="${module.{{PLUGINNAME}}.basedir}/out/test/{{PLUGINNAME}}"/>
+  <property name="{{PLUGINNAME}}.output.dir" value="${module.{{PLUGINNAME}}.basedir}/out/build"/>
+  <property name="{{PLUGINNAME}}.bin.dir" value="${module.{{PLUGINNAME}}.basedir}/out/bin"/>
   
   <path id="{{PLUGINNAME}}.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
@@ -86,7 +86,6 @@
   </path>
   
   <path id="{{PLUGINNAME}}.runtime.module.classpath">
-    <pathelement location="${{{PLUGINNAME}}.testoutput.dir}"/>
     <pathelement location="${{{PLUGINNAME}}.output.dir}"/>
   </path>
   
@@ -130,11 +129,19 @@
   
   <target name="clean.module.{{PLUGINNAME}}" description="cleanup module">
     <delete dir="${{{PLUGINNAME}}.output.dir}"/>
-    <delete dir="${{{PLUGINNAME}}.testoutput.dir}"/>
+    <delete dir="${{{PLUGINNAME}}.bin.dir}"/>
   </target>
   
   <target name="init" description="Build initialization">
     <!-- Perform any build initialization in this target -->
+  </target>
+
+
+  <target name="dist" depends="build.modules"
+        description="generate the distribution" >
+    <mkdir dir="${{{PLUGINNAME}}.bin.dir}"/>
+
+    <jar jarfile="${module.{{PLUGINNAME}}.basedir}/lib/{{PLUGINNAME}}.jar" basedir="${{{PLUGINNAME}}.bin.dir}"/>
   </target>
   
   <target name="clean" depends="clean.module.{{PLUGINNAME}}" description="cleanup all"/>
