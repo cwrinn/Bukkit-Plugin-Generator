@@ -2,7 +2,7 @@ name: <pluginname>
 description: <plugindescription>
 author: <yourname>
 #website: www.example.com
-main: org.bukkit.<yourname>.<pluginname>
+main: org.bukkit.<yourname>.<pluginname>.<pluginname>
 version: <pluginversion>
 #commands:
 #    example:
