@@ -51,6 +51,7 @@
     <include name="**/?*.dtd"/>
     <include name="**/?*.tld"/>
     <include name="**/?*.ftl"/>
+    <include name="**/?*.yml"/>
   </patternset>
   
   
